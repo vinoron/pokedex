@@ -1,45 +1,45 @@
-import React from 'react'
-import { observer, emit, useValue, useLocal } from 'startupjs'
-import './index.styl'
-import { Row, Div, Layout, SmartSidebar, Menu, Button, H1 } from '@startupjs/ui'
+import React, { useEffect } from 'react'
+import { ImageBackground } from 'react-native'
+import { withRouter } from 'react-router'
+import { useSession, observer } from 'startupjs'
+import { Layout, Div, DrawerSidebar, Row, Button } from '@startupjs/ui'
+import { BASE_URL } from '@env'
 import { faBars } from '@fortawesome/free-solid-svg-icons'
-import APP from '../../app.json'
+import LeftMenu from 'components/LeftMenu'
+import { SIDEBAR_KEY } from '../../const/default'
 
-const { displayName } = APP
+import './index.styl'
 
-const APP_NAME = displayName.charAt(0).toUpperCase() + displayName.slice(1)
+const MainLayout = ({ match, children }) => {
+  const [, $open] = useSession(SIDEBAR_KEY)
+  const onPress = () => $open.set(true)
+  const pic = `${BASE_URL}/img/bg02.jpg`
 
-const MenuItem = observer(({ url, children }) => {
-  const [currentUrl] = useLocal('$render.url')
-  return pug`
-    Menu.Item(
-      active=currentUrl === url
-      onPress=() => emit('url', url)
-    )= children
+  const getMenu = () => pug`
+    LeftMenu
   `
-})
-
-export default observer(function ({ children }) {
-  const [opened, $opened] = useValue(false)
-
-  function renderSidebar () {
-    return pug`
-      Menu.sidebar-menu
-        MenuItem(url='/') App
-        MenuItem(url='/about') About
-    `
-  }
+  useEffect(() => {
+    $open.set(false)
+  }, [match.params])
 
   return pug`
-    Layout
-      SmartSidebar.sidebar(
-        path=$opened.path()
-        renderContent=renderSidebar
+    Layout.root
+      ImageBackground.bg(
+        source={uri: pic}
+        imageStyleName='bgImage'
+        resizeMode="cover"
       )
-        Row.menu
-          Button(color='secondaryText' icon=faBars onPress=() => $opened.set(!opened))
-          H1.logo= APP_NAME
-
-        Div.body= children
+        DrawerSidebar(
+          $open=$open
+          width=240
+          defaultOpen=false
+          renderContent=getMenu
+        )
+          Div.content
+            Row.sidebarLine
+              Button.bars(onPress=onPress variant='flat' icon=faBars)
+            Row=children
   `
-})
+}
+
+export default withRouter(observer(MainLayout))

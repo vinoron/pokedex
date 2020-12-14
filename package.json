@@ -27,6 +27,7 @@
     "@react-native-picker/picker": "^1.9.3",
     "@startupjs/ui": "^0.29.13",
     "axios": "^0.21.0",
+    "lodash": "^4.17.20",
     "nconf": "^0.10.0",
     "react": "^17.0.1",
     "react-dom": "^17.0.1",
@@ -67,5 +68,9 @@
       "pre-commit": "lint-staged"
     }
   },
-  "sideEffects": []
+  "sideEffects": [],
+  "// The following is temporary, since 7.12.10 has a bug. Remove this when new version is released": null,
+  "resolutions": {
+   "**/@babel/plugin-transform-react-jsx": ">= 7.12 < 7.12.10 || > 7.12.10 < 8.0.0"
+  }
 }
