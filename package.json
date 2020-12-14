@@ -68,5 +68,9 @@
       "pre-commit": "lint-staged"
     }
   },
-  "sideEffects": []
+  "sideEffects": [],
+  "// The following is temporary, since 7.12.10 has a bug. Remove this when new version is released": null,
+  "resolutions": {
+   "**/@babel/plugin-transform-react-jsx": ">= 7.12 < 7.12.10 || > 7.12.10 < 8.0.0"
+  }
 }
